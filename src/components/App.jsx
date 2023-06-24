@@ -1,4 +1,5 @@
 import { Component } from 'react';
+import css from './App.module.css';
 import ContactForm from './ContactForm/ContactForm';
 import ContactList from './ContactList/ContactList';
 import Filter from './Filter/Filter';
@@ -33,27 +34,19 @@ class Phonebook extends Component {
   };
 
   onFilterContact = evt => {
-    const data = evt.target.value;
-    this.setState({ filter: data });
-    // this.state.contacts = [
-    //   { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
-    //   { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
-    //   { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
-    //   { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
-    // ];
-    // this.setState(state => ({
-    //   contacts: this.state.contacts.filter(
-    //     contact => contact.name.indexOf(data) !== -1
-    //   ),
-    // }));
-    return data;
+    this.setState({ filter: evt.target.value });
   };
 
-  showContacts = () => {};
+  getVisibleContacts = () => {
+    const normalisedFilter = this.state.filter.toLowerCase();
+    return this.state.contacts.filter(contact =>
+      contact.name.toLowerCase().includes(normalisedFilter)
+    );
+  };
 
   render() {
     return (
-      <div>
+      <div className={css.appDiv}>
         <h1>Phonebook</h1>
         <ContactForm onContactInfo={this.onContactInfo} />
         <section>
@@ -64,9 +57,8 @@ class Phonebook extends Component {
           />
           {}
           <ContactList
-            onFilterContact={this.onFilterContact}
             onDeletContact={this.onDeletContact}
-            listContacts={this.state.contacts}
+            listContacts={this.getVisibleContacts()}
           />
         </section>
       </div>
